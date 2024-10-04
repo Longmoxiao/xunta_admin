@@ -103,7 +103,7 @@ export default {
       tableLabel: [
         { prop: 'userId', label: '用户ID', width: 250 },
         { prop: 'userName', label: '用户昵称', width: 220 },
-        { prop: 'money', label: '充值金额', width: 255 },
+        { prop: 'money', label: '操作金额', width: 255 },
         { prop: 'royalLevel', label: '当前贵族等级', width: 210 },
         { prop: 'transactionId', label: '交易单号', width: 390 },
         { prop: 'time', label: '支付时间', width: 290 },
@@ -225,6 +225,7 @@ export default {
           let jsonData = response.data.data.records;
           let i = 0;
           let st1 = ""
+          var tb1 = []
           for (let item in jsonData) {
             let jc = jsonData[item].time
             for (let jt in jc) {
@@ -245,9 +246,10 @@ export default {
             jsonData[item].time = st1
             st1 = ""
             i = 0
-            _this.tableData.highAppearance = jsonData
-
+            tb1=jsonData
+            
           }
+          _this.tableData.highAppearance=tb1
         });
 
         axios.get("/admin/wallet/queryConsumption?page=1&pageSize=7&userId="+ _this.userID +"&userName="+_this.userName+"transactionId&startTime&endTime&timeType")
@@ -258,6 +260,7 @@ export default {
           console.log(jsonData)
           let i = 0;
           let st1 = ""
+          var tb1 = []
           for (let item in jsonData) {
             let jc = jsonData[item].time
             for (let jt in jc) {
@@ -278,10 +281,9 @@ export default {
             jsonData[item].time = st1
             st1 = ""
             i = 0
-            _this.tableData.reflection = jsonData
-
+            tb1=jsonData
           }
-
+          _this.tableData.reflection=tb1
         });
     },
     selectToday() {

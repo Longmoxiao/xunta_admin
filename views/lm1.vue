@@ -23,14 +23,14 @@
                                 </el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="4" offset="">
+                        <el-col :span="4" >
                             &nbsp;&nbsp;&nbsp;
-                            <el-button type="primary" style="width: 120px;margin-left: 100px;">搜索</el-button>
+                            <el-button type="primary"  @click="selectTab" style="width: 120px;margin-left: 100px;">搜索</el-button>
                         </el-col>
                     </el-row>
                     <div></div>
 
-                    <el-col :span="4" offset="19">
+                    <el-col :span="4" :offset="19">
                         &nbsp;&nbsp;&nbsp;
                         <el-button type="primary" style="width: 120px;margin-left: 100px;margin-top:50px"
                             @click="dialogVisible = true">+新建</el-button>
@@ -97,20 +97,11 @@ export default{
     data() {
         return {
             options: [{
-                value: '选项1',
-                label: '黄金糕'
+                value: '1',
+                label: '男'
             }, {
-                value: '选项2',
-                label: '双皮奶'
-            }, {
-                value: '选项3',
-                label: '蚵仔煎'
-            }, {
-                value: '选项4',
-                label: '龙须面'
-            }, {
-                value: '选项5',
-                label: '北京烤鸭'
+                value: '2',
+                label: '女'
             }],
             value: '',
             tableData: [{ id: '1', temperamentName: '温柔型', phone: '技能', gender: '男', },
@@ -122,6 +113,8 @@ export default{
             ],
             dialogVisible: false,
             pages:20,
+            radio:'',
+            input:'',
         }
     },
     methods: {
@@ -146,7 +139,13 @@ export default{
         },
         handleCurrentChange(val) {
             const _this = this;
-            axios.post('/admin/temperamentTag/search_tag', { page: val, pageSize: '7' })
+            var sex=null;
+            var input1=null;
+            if(_this.input=="") input1=null
+            else input1=_this.input
+            if(_this.value=='1') sex=1
+            else if(_this.values=='0')sex=0
+            axios.post('/admin/temperamentTag/search_tag', { page: val, pageSize: '7' ,temperamentName: input1, gender: sex})
                 .then(function (response) {
                     let js = response.data.data.total;
                     _this.pages=js
@@ -162,7 +161,32 @@ export default{
                         _this.tableData = jsonData
                     }
                 })
-      }
+        },
+        selectTab(){
+            const _this = this;
+            var sex=null;
+            var input1=null;
+            if(_this.input=="") input1=null
+            else input1=_this.input
+            if(_this.value=='1') sex=1
+            else if(_this.values=='0')sex=0
+            axios.post('/admin/temperamentTag/search_tag', { page: '1', pageSize: '7' ,temperamentName: input1, gender: sex})
+                .then(function (response) {
+                    let js = response.data.data.total;
+                    _this.pages=js
+                    let jsonData = response.data.data.records;
+                    for (let item in jsonData) {
+                        let jc = jsonData[item].createTime
+                        if (jsonData[item].gender == '1') {
+                            jsonData[item].gender = '男'
+                        } else {
+                            jsonData[item].gender = '女'
+                        }
+                       
+                        _this.tableData = jsonData
+                    }
+                })
+        }
     },
     mounted() {
         this.init();

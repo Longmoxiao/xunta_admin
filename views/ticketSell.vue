@@ -34,11 +34,11 @@
                                 </el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="4" offset="1">
+                        <el-col :span="4" :offset="1">
                             &nbsp;&nbsp;&nbsp;
                             <el-button type="primary" @click="selectTab" style="width: 120px;margin-left: 100px;">搜索</el-button>
                         </el-col>
-                        <el-col :span="4" offset="9">
+                        <el-col :span="4" :offset="9">
                             &nbsp;&nbsp;&nbsp;
                             <el-button type="primary" style="width: 120px;margin-left: 100px;margin-top:50px"
                                 @click="dialogVisible = true">+新建</el-button>
@@ -111,6 +111,7 @@ export default {
     },
     data() {
         return {
+            radio:'',
             options: [{
                 value: '选项1',
                 label: '男'
@@ -119,19 +120,19 @@ export default {
                 label: '女'
             }],
             options1: [{
-                value: '选项1',
+                value: '1',
                 label: '技能'
             }, {
-                value: '选项2',
+                value: '2',
                 label: '外形'
             }, {
-                value: '选项3',
+                value: '3',
                 label: '特点'
             }, {
-                value: '选项4',
+                value: '4',
                 label: '经历'
             }, {
-                value: '选项5',
+                value: '5',
                 label: '偏好'
             }],
             value: '',
@@ -166,7 +167,7 @@ export default {
                             jsonData[item].gender = '女'
                         }
                         if (jsonData[item].typeId == '1') {
-                            jsonData[item].typeId = '技能'
+                            jsonData[item].typeId = '偏好'
                         } else if (jsonData[item].typeId == '2') {
                             jsonData[item].typeId = '外形'
                         } else if (jsonData[item].typeId == '3') {
@@ -174,7 +175,7 @@ export default {
                         } else if (jsonData[item].typeId == '4') {
                             jsonData[item].typeId = '经历'
                         } else {
-                            jsonData[item].typeId = '偏好'
+                            jsonData[item].typeId = '技能'
                         }
                         _this.tableData = jsonData
                     }
@@ -182,7 +183,20 @@ export default {
         },
         handleCurrentChange(val) {
             const _this = this;
-            axios.post('/admin/personalTag/search_tag', { page: val, pageSize: '7' })
+            var input1 = ''
+            var value11 = ''
+            var sex1 = ''
+            if(_this.input=='') input1=null
+            else input1=_this.input
+            if(_this.value1=='') value11=null
+            else value11=_this.value1
+            if(_this.sex=='') {sex1='null'}
+            else if(_this.sex=="选项1") {sex1=1}
+            else{sex1=0}
+            console.log(input1)
+            console.log(value11)
+            console.log(sex1)
+            axios.post('/admin/personalTag/search_tag', { page: val, pageSize: '7', typeName: input1, typeId: value11, gender: sex1 })
                 .then(function (response) {
                     let jsonData = response.data.data.records;
                     for (let item in jsonData) {
@@ -209,7 +223,20 @@ export default {
         },
         selectTab(){
             const _this = this
-            axios.post('/admin/personalTag/search_tag', { page: '1', pageSize: '7',typeName: _this.input, typeId: _this.value1,gender :_this.sex})
+            var input1 = ''
+            var value11 = ''
+            var sex1 = ''
+            if(_this.input=='') input1=null
+            else input1=_this.input
+            if(_this.value1=='') value11=null
+            else value11=_this.value1
+            if(_this.sex=='') {sex1='null'}
+            else if(_this.sex=="选项1") {sex1=1}
+            else{sex1=0}
+            console.log(input1)
+            console.log(value11)
+            console.log(sex1)
+            axios.post('/admin/personalTag/search_tag', { page: '1', pageSize: '7', typeName: input1, typeId: value11, gender: sex1})
                 .then(function (response) {
                     let js = response.data.data.total;
                     _this.pages=js
@@ -232,9 +259,13 @@ export default {
                         } else {
                             jsonData[item].typeId = '偏好'
                         }
-                        _this.tableData = jsonData
+                        
                     }
+                    _this.tableData = jsonData
+                    console.log(jsonData)
                 })
+                console.log(_this.tableData)
+
         }
     },
     mounted() {

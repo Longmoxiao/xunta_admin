@@ -23,21 +23,23 @@
                                 </el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="4" offset="">
+                        <el-col :span="4" >
                             &nbsp;&nbsp;&nbsp;
-                            <el-button type="primary" style="width: 120px;margin-left: 100px;">搜索</el-button>
+                            <el-button type="primary" @click="selectTab"
+                                style="width: 120px;margin-left: 100px;">搜索</el-button>
                         </el-col>
                     </el-row>
                     <div></div>
 
-                    <el-col :span="4" offset="19">
+                    <el-col :span="4" :offset="19">
                         &nbsp;&nbsp;&nbsp;
                         <el-button type="primary" style="width: 120px;margin-left: 100px;margin-top:50px"
                             @click="dialogVisible = true">+新建</el-button>
-                        <el-dialog title="新建个人标签" :visible.sync="dialogVisible" center style="width:800px;top:10%;left:32%;">
+                        <el-dialog title="新建个人标签" :visible.sync="dialogVisible" center
+                            style="width:800px;top:10%;left:32%;">
                             <div style="height:50px;font-size:18px">
                                 <label>个人标签名称</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <el-input v-model="input" placeholder="请输入内容" style="width:180px"></el-input>
+                                <el-input v-model="input11" placeholder="请输入内容" style="width:180px"></el-input>
                             </div>
                             <div style="height:40px;font-size:18px">
                                 <label>适用性别</label>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -47,15 +49,18 @@
                             <div style="font-size:18px">
                                 <label>使用模块</label>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <el-radio v-model="radio" label="1">技能</el-radio>
-                                <el-radio v-model="radio" label="2">外形</el-radio><div></div>
+                                <el-radio v-model="radio" label="2">外形</el-radio>
+                                <div></div>
                                 <el-radio v-model="radio" label="3" style="margin-left:99px">特点</el-radio>
-                                <el-radio v-model="radio" label="4">经历</el-radio><div></div>
+                                <el-radio v-model="radio" label="4">经历</el-radio>
+                                <div></div>
                                 <el-radio v-model="radio" label="5" style="margin-left:99px">偏好</el-radio>
                             </div>
                             <span slot="footer" class="dialog-footer">
                                 <el-button @click="dialogVisible = false" style="margin-right:20px">取 消</el-button>
-                                <el-button type="primary" @click="dialogVisible = false" style="margin-left:20px">确 定</el-button>
-                              </span>
+                                <el-button type="primary" @click="dialogVisible = false" style="margin-left:20px">确
+                                    定</el-button>
+                            </span>
                         </el-dialog>
                     </el-col>
                     <div></div>
@@ -76,9 +81,9 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination align="center" @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="7"
-                            :total=this.pages>
-                        </el-pagination>
+                    <el-pagination align="center" @current-change="handleCurrentChange" layout="prev, pager, next"
+                        :page-size="7" :total=this.pages>
+                    </el-pagination>
                 </el-card>
             </el-main>
         </el-container>
@@ -90,29 +95,20 @@ import { init } from 'echarts';
 import lmheader from '../src/components/lmheader.vue'
 import axios from 'axios';
 
-export default{
-    name:'lm2',
+export default {
+    name: 'lm2',
     components: {
         lmheader,
     },
     data() {
         return {
             options: [{
-                value: '选项1',
-                label: '黄金糕'
+                value: '1',
+                label: '男'
             }, {
-                value: '选项2',
-                label: '双皮奶'
-            }, {
-                value: '选项3',
-                label: '蚵仔煎'
-            }, {
-                value: '选项4',
-                label: '龙须面'
-            }, {
-                value: '选项5',
-                label: '北京烤鸭'
-            }],
+                value: '2',
+                label: '女'
+            },],
             value: '',
             tableData: [{ impressionId: '1', impressionName: '真实', phone: '技能', gender: '男', },
             { impressionId: '2', impressionName: '大长腿', phone: '技能', gender: '女', age: '23', }
@@ -122,6 +118,10 @@ export default{
             { prop: 'gender', label: '适用性别', width: "420" },
             ],
             dialogVisible: false,
+            input:'',
+            radio:'',
+            pages:10,
+            input11:'',
         }
     },
     methods: {
@@ -130,7 +130,7 @@ export default{
             axios.post('/admin/impressionTag/search_tag', { page: '1', pageSize: '7' })
                 .then(function (response) {
                     let js = response.data.data.total;
-                    _this.pages=js
+                    _this.pages = js
                     let jsonData = response.data.data.records;
                     for (let item in jsonData) {
                         let jc = jsonData[item].createTime
@@ -139,17 +139,17 @@ export default{
                         } else {
                             jsonData[item].gender = '女'
                         }
-                        
+
                         _this.tableData = jsonData
                     }
                 })
         },
         handleCurrentChange(val) {
             const _this = this;
-            axios.post('/admin/impressionTag/search_tag', { page: val, pageSize: '7' })
+            axios.post('/admin/impressionTag/search_tag', { page: val, pageSize: '7' ,impressionName: input1, gender: sex})
                 .then(function (response) {
                     let js = response.data.data.total;
-                    _this.pages=js
+                    _this.pages = js
                     let jsonData = response.data.data.records;
                     for (let item in jsonData) {
                         let jc = jsonData[item].createTime
@@ -158,16 +158,41 @@ export default{
                         } else {
                             jsonData[item].gender = '女'
                         }
-                        
+
                         _this.tableData = jsonData
                     }
                 })
-      }
+        },
+        selectTab() {
+            const _this = this;
+            var sex = null;
+            var input1 = null;
+            if (_this.input == "") input1 = null
+            else input1 = _this.input
+            if (_this.value == '1') sex = 1
+            else if (_this.values == '0') sex = 0
+            axios.post('/admin/impressionTag/search_tag', { page: 1, pageSize: '7' ,impressionName: input1, gender: sex})
+                .then(function (response) {
+                    let js = response.data.data.total;
+                    _this.pages = js
+                    let jsonData = response.data.data.records;
+                    for (let item in jsonData) {
+                        let jc = jsonData[item].createTime
+                        if (jsonData[item].gender == '1') {
+                            jsonData[item].gender = '男'
+                        } else {
+                            jsonData[item].gender = '女'
+                        }
+
+                        _this.tableData = jsonData
+                    }
+                })
+        }
     },
     mounted() {
         this.init();
     },
-    
+
 }
 </script>
 
@@ -176,24 +201,25 @@ export default{
     font-size: 18px;
     padding-left: 20px;
 }
-::v-deep .el1 .el-radio__input .el-radio__inner{
+
+::v-deep .el1 .el-radio__input .el-radio__inner {
     border-radius: 2px;
 }
 
-::v-deep .el1 .el-radio__input.is-checked  .el-radio__inner::after{
-      content: '';
-      width: 8px;
-      height: 3px;
-      border: 2px solid white;
-      border-top: transparent;
-      border-right: transparent;
-      text-align: center;
-      display: block;
-      position: absolute;
-      top: 2px;
-      left: 1px;
-      transform: rotate(-45deg);
-      border-radius: 0px;
-      background: none;
-  }
+::v-deep .el1 .el-radio__input.is-checked .el-radio__inner::after {
+    content: '';
+    width: 8px;
+    height: 3px;
+    border: 2px solid white;
+    border-top: transparent;
+    border-right: transparent;
+    text-align: center;
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 1px;
+    transform: rotate(-45deg);
+    border-radius: 0px;
+    background: none;
+}
 </style>

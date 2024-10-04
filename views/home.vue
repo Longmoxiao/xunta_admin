@@ -86,7 +86,7 @@
               width="140px"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="small">审核</el-button>
+                <el-button @click="handleClick(scope.row)" type="text" size="small">操作</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -299,6 +299,73 @@ export default {
             st1 = ""
             i = 0
             _this.tableData.reflection = jsonData
+            _this.tableData.reflection = _this.tableData.reflection.slice(0, 7)
+          }
+        });
+
+      axios.get('/admin/reportOrder/queryReportOrder?userId&reportType&reportedCountMin&reportedCountMax&reportTime&reportStatus&page=1&pageSize=7')
+        .then(function (response) {
+          let js = response.data.data
+          let jsonData = js.records
+          let i = 0;
+          let st1 = ""
+          var tb1 = _this.tableData.report
+          for (let item in jsonData) {
+            let jc = jsonData[item].createTime
+            for (let jt in jc) {
+              st1 = st1 + String(jc[jt])
+              i = i + 1
+              if (i == '3') {
+                st1 = st1 + ' '
+              } else if (i == "6") {
+                st1 = st1 + ' '
+              } else if (i > 3) {
+                st1 = st1 + ':'
+              }
+              else {
+                st1 = st1 + '-'
+              }
+            }
+            jsonData[item].createTime = st1
+            st1 = ""
+            i = 0
+            // _this.tableData.report = jsonData
+            tb1 = jsonData
+
+          }
+          const transformedReport = tb1.map(item => ({
+            name: item.userName,
+            createTime: item.createTime
+          }));
+          _this.tableData.report = transformedReport
+        });
+
+      axios.get('/admin/dateCount/getCertificationOrders')
+        .then(function (response) {
+          let jsonData = response.data.data
+          let i = 0;
+          let st1 = ""
+          for (let item in jsonData) {
+            let jc = jsonData[item].createTime
+            for (let jt in jc) {
+              st1 = st1 + String(jc[jt])
+              i = i + 1
+              if (i == '3') {
+                st1 = st1 + ' '
+              } else if (i == "6") {
+                st1 = st1 + ' '
+              } else if (i > 3) {
+                st1 = st1 + ':'
+              }
+              else {
+                st1 = st1 + '-'
+              }
+            }
+            jsonData[item].createTime = st1
+            st1 = ""
+            i = 0
+            _this.tableData.highAppearance = jsonData
+            _this.tableData.highAppearance = _this.tableData.highAppearance.slice(0, 7)
           }
         });
 
@@ -768,7 +835,7 @@ export default {
       // 在这里处理按钮点击事件的逻辑
     },
     toMore() {
-
+      this.$router.push({ name: 'chargeMount' });
     }
 
 

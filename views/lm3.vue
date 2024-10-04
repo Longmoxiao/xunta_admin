@@ -12,7 +12,8 @@
                 <el-card style="height:750px">
                     <div style="margin-top:30px;margin-left:100px;font-size:20px">
                         <label>注册时是否显示系统邀请码：</label>
-                        <el-switch v-model="value" active-color="#13ce66" inactive-color="#ff4949">
+                        <el-switch v-model="value" @change="handleChange" active-color="#13ce66"
+                            inactive-color="#ff4949">
                         </el-switch>
                     </div>
 
@@ -43,8 +44,16 @@ export default {
             axios.get("/admin/code/getCodeAndIsUse")
                 .then(function (response) {
                     let jsonData = response.data.data;
-                    if(jsonData.isUse =='0')
-                    _this.value=false
+                    if (jsonData.isUse == '0')
+                        _this.value = false
+                })
+        },
+        handleChange(val) {
+            var isu=0
+            if(val==true) isu=1
+            axios.post('/admin/code/updateIsUse', { isUse: isu})
+                .then(function (response) {
+                    console.log(isu)
                 })
         }
     },

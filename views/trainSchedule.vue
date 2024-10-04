@@ -132,7 +132,7 @@ export default {
     },
     handleCurrentChange(val) {
       const _this = this;
-      axios.get("/admin/wallet/queryWithdrawalApplication?page="+ val+ "&pageSize=9&userId"+_this.userID+"&timeType=0&status=0")
+      axios.get("/admin/wallet/queryWithdrawalApplication?page="+ val+ "&pageSize=9&userId="+_this.userID+"&timeType=0&status=0")
         .then(function (response) {
           let jsonData = response.data.data.records;
           for (let item in jsonData){
@@ -148,7 +148,7 @@ export default {
     },
     getList(){
       const _this = this;
-      axios.get("/admin/wallet/queryWithdrawalApplication?page=1&pageSize=9&userId"+_this.userID+"&timeType=0&status=0")
+      axios.get("/admin/wallet/queryWithdrawalApplication?page=1&pageSize=9&userId="+_this.userID+"&timeType=0&status=0")
         .then(function (response) {
           let jsonData = response.data.data.records;
           for (let item in jsonData){
